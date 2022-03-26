@@ -10,15 +10,23 @@
     const List = ({ list }) => {
       return (
         <>
-          <ul>
-            {list.map((item) => (
-              <li key={item.objectID}>
-                <a href={item.url}>{item.title}</a>
-                <p>{item.author}</p>
-                <hr />
+          <ol>
+            {list.map(({ objectID, ...item }) => (
+              <li>
+                <Item key={item.objectID} {...item} />
               </li>
             ))}
-          </ul>
+          </ol>
+        </>
+      );
+    };
+
+    const Item = ({ url, title, author }) => {
+      return (
+        <>
+          <a href={url}>{title}</a>
+          <p>{author}</p>
+          <hr />
         </>
       );
     };
@@ -66,17 +74,17 @@
         setSearchTerm(event.target.value);
       };
 
-      const searchedStories = (searchTerm) => (item) =>
+      const searchedStories = (searchTerm) => (story) =>
         !searchTerm ||
-        item.title.toLowerCase().includes(searchTerm.toLowerCase());
+        story.title.toLowerCase().includes(searchTerm.toLowerCase());
 
       const filteredStories = STORIES.filter(searchedStories(searchTerm));
 
       return (
         <>
-          <h1>My Hacker Stories</h1>
+          <h1>Stupid Stories</h1>
 
-          {/* pass a function to the child as a prop(filteredStories) */}
+          {/* pass a function to the child as a prop(handleSearch) */}
           <Search searchTerm={searchTerm} handleSearch={handleSearch} />
 
           <hr />
