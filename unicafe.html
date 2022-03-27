@@ -10,27 +10,40 @@
       <button onClick={handleClick}>{text}</button>
     );
 
-    const Stat = ({ good, neutral, bad, all, average, positive }) => {
+    const Stats = ({ good, neutral, bad, all, average, positive }) => {
       return (
-        <>
-          <StatLine text="good" value={good} unit="" />
-          <StatLine text="neutral" value={neutral} unit="" />
-          <StatLine text="bad" value={bad} unit="" />
-          <StatLine text="all" value={all.length} unit="" />
-          <StatLine text="average" value={average} unit="" />
-          <StatLine text="positive" value={positive} unit="%" />
+        <table>
+          <tr>
+            <StatLine text="good" value={good} unit="" />
+          </tr>
+          <tr>
+            <StatLine text="neutral" value={neutral} unit="" />
+          </tr>
+          <tr>
+            <StatLine text="bad" value={bad} unit="" />
+          </tr>
+          <tr>
+            <StatLine text="all" value={all.length} unit="" />
+          </tr>
+          <tr>
+            <StatLine text="average" value={average} unit="" />
+          </tr>
+          <tr>
+            <StatLine text="positive" value={positive} unit="%" />
+          </tr>
 
           {/* */}
-        </>
+        </table>
       );
     };
 
     const StatLine = ({ text, value, unit }) => {
       return (
         <>
-          <p>
-            {text} : {value} {unit}
-          </p>
+          <td>{text}</td>
+          <td>
+            {value} {unit}
+          </td>
         </>
       );
     };
@@ -41,8 +54,8 @@
       const [bad, setBad] = React.useState(0);
       const [all, setAll] = React.useState([]);
       const [point, setPoint] = React.useState(0);
-      const average = point / all.length;
-      const positive = (good / all.length) * 100;
+      const average = (point / all.length).toFixed(2);
+      const positive = ((good / all.length) * 100).toFixed(1);
 
       const addGood = () => {
         all.push('G');
@@ -73,7 +86,7 @@
           <hr />
           <h2>statistics</h2>
           {all.length !== 0 ? (
-            <Stat
+            <Stats
               good={good}
               neutral={neutral}
               bad={bad}
