@@ -1,0 +1,93 @@
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@16.12.0/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+  <script type="text/babel">
+    const rootElement = document.getElementById('root');
+
+    const Button = ({ handleClick, text }) => (
+      <button onClick={handleClick}>{text}</button>
+    );
+
+    const Stat = ({ good, neutral, bad, all, average, positive }) => {
+      return (
+        <>
+          <StatLine text="good" value={good} unit="" />
+          <StatLine text="neutral" value={neutral} unit="" />
+          <StatLine text="bad" value={bad} unit="" />
+          <StatLine text="all" value={all.length} unit="" />
+          <StatLine text="average" value={average} unit="" />
+          <StatLine text="positive" value={positive} unit="%" />
+
+          {/* */}
+        </>
+      );
+    };
+
+    const StatLine = ({ text, value, unit }) => {
+      return (
+        <>
+          <p>
+            {text} : {value} {unit}
+          </p>
+        </>
+      );
+    };
+
+    const App = () => {
+      const [good, setGood] = React.useState(0);
+      const [neutral, setNeutral] = React.useState(0);
+      const [bad, setBad] = React.useState(0);
+      const [all, setAll] = React.useState([]);
+      const [point, setPoint] = React.useState(0);
+      const average = point / all.length;
+      const positive = (good / all.length) * 100;
+
+      const addGood = () => {
+        all.push('G');
+        setGood(good + 1);
+        setPoint(point + 1);
+      };
+
+      const addNeutral = () => {
+        all.push('N');
+        setNeutral(neutral + 1);
+        setPoint(point + 0);
+      };
+
+      const addBad = () => {
+        all.push('B');
+        setBad(bad + 1);
+        setPoint(point - 1);
+      };
+
+      return (
+        <>
+          <h1>give feedback</h1>
+          <Button handleClick={addGood} text={'good'} />
+          <span> | </span>
+          <Button handleClick={addNeutral} text={'neutral'} />
+          <span> | </span>
+          <Button handleClick={addBad} text={'bad'} />
+          <hr />
+          <h2>statistics</h2>
+          {all.length !== 0 ? (
+            <Stat
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              all={all}
+              average={average}
+              positive={positive}
+            />
+          ) : (
+            'No feedback given'
+          )}
+        </>
+      );
+    };
+
+    ReactDOM.render(<App />, rootElement);
+  </script>
+</body>
