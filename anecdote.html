@@ -1,0 +1,90 @@
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@16.12.0/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+  <script type="text/babel">
+    const rootElement = document.getElementById('root');
+
+    const App = () => {
+      const anecdotes = [
+        'If it hurts, do it more often',
+        'Adding manpower to a late software project makes it later!',
+        'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+        'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+        'Premature optimization is the root of all evil.',
+        'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+        'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients',
+      ];
+
+      const [selected, setSelected] = React.useState(0);
+      const nextAnecdote = () => {
+        setSelected(Math.floor(Math.random() * anecdotes.length));
+      };
+
+      //console.log(selected, anecdotes[selected]);
+
+      const [points, setPoints] = React.useState(
+        Array.from(Array(anecdotes.length), () => 0)
+      );
+
+      const addVoteCount = () => {
+        const newPoints = points.map((point, index) => {
+          index === selected ? (point += 1) : (point += 0);
+          return point;
+        });
+        setPoints(newPoints);
+      };
+      const maxVoted = Math.max(...points);
+
+      return (
+        <div>
+          <AnecdoteOfTheDay
+            anecdotes={anecdotes}
+            selected={selected}
+            points={points}
+          />
+          <Button handleClick={nextAnecdote} text="next anecdote" />
+          <span> | </span>
+          <Button handleClick={addVoteCount} text="vote" />
+          <hr />
+          <MostVotedAnecdote
+            anecdotes={anecdotes}
+            mostIndex={points.indexOf(maxVoted)}
+            mostPoint={Math.max(...points)}
+          />
+        </div>
+      );
+    };
+
+    const Button = ({ handleClick, text }) => {
+      return (
+        <>
+          <button onClick={handleClick}>{text}</button>
+        </>
+      );
+    };
+
+    const AnecdoteOfTheDay = ({ anecdotes, selected, points }) => {
+      return (
+        <>
+          <h2>Anecdote of the day</h2>
+          <p>{anecdotes[selected]}</p>
+          <p>has {points[selected]}</p>
+        </>
+      );
+    };
+
+    const MostVotedAnecdote = ({ anecdotes, mostIndex, mostPoint }) => {
+      return (
+        <>
+          <h2>Anecdote of the day</h2>
+          <p>{anecdotes[mostIndex]}</p>
+          <p>has {mostPoint} votes</p>
+        </>
+      );
+    };
+
+    ReactDOM.render(<App />, rootElement);
+  </script>
+</body>
