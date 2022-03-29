@@ -78,14 +78,12 @@
       //console.log(exercises);
       return (
         <>
-          <p>
-            <b>
-              Total of <span> </span>
-              {exercises.reduce((sum, part) => sum + part.exercises, 0)}{' '}
-              <span> </span>
-              exercises
-            </b>
-          </p>
+          <h3>
+            Total of <span> </span>
+            {exercises.reduce((sum, part) => sum + part.exercises, 0)}
+            <span> </span>
+            exercises
+          </h3>
         </>
       );
     };
