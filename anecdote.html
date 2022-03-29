@@ -35,6 +35,7 @@
         });
         setPoints(newPoints);
       };
+
       const maxVoted = Math.max(...points);
 
       return (
@@ -68,7 +69,7 @@
     const AnecdoteOfTheDay = ({ anecdotes, selected, points }) => {
       return (
         <>
-          <h2>Anecdote of the day</h2>
+          <h2>Anecdote with most votes</h2>
           <p>{anecdotes[selected]}</p>
           <p>has {points[selected]}</p>
         </>
