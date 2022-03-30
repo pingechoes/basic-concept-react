@@ -63,9 +63,9 @@
             //console.log('hello', course.parts);
             return (
               <>
-                <Header id={course.id} name={course.name} />
-                <Content parts={course.parts} />
-                <Total exercises={course.parts} />
+                <Header key={course.id} name={course.name} />
+                <Content key={course.id} parts={course.parts} />
+                <Total key={course.id} exercises={course.parts} />
                 <hr />
               </>
             );
@@ -74,7 +74,7 @@
       );
     };
 
-    const Total = ({ exercises }) => {
+    const Total = ({ id, exercises }) => {
       //console.log(exercises);
       return (
         <>
@@ -88,37 +88,23 @@
       );
     };
 
-    const Header = ({ id, name }) => {
-      return <h2 key={id}>{name}</h2>;
-    };
+    const Header = ({ name }) => <h2>{name}</h2>;
 
     const Content = ({ parts }) => {
       return (
-        <>
-          {parts.map((part) => {
-            return (
-              <>
-                <Part
-                  id={part.id}
-                  name={part.name}
-                  exercises={part.exercises}
-                />
-              </>
-            );
-          })}
-        </>
+        <div>
+          {parts.map((part) => (
+            <Part key={part.id} name={part.name} exercises={part.exercises} />
+          ))}
+        </div>
       );
     };
 
-    const Part = ({ id, name, exercises }) => {
-      return (
-        <>
-          <p key={id}>
-            {name} <span> </span> {exercises}
-          </p>
-        </>
-      );
-    };
+    const Part = ({ name, exercises }) => (
+      <p>
+        {name} <span> </span> {exercises}
+      </p>
+    );
 
     ReactDOM.render(<App />, rootElement);
   </script>
