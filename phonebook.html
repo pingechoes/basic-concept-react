@@ -1,0 +1,135 @@
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@16.12.0/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+  <script type="text/babel">
+    const rootElement = document.getElementById('root');
+
+    const App = () => {
+      const INITIAL_PERSONS = [
+        { name: 'Zinedine Zidane', number: '040-123456', id: 1 },
+        { name: 'Rui Costa', number: '39-44-5323523', id: 2 },
+        { name: 'Juan Roman Riquelme', number: '12-43-234345', id: 3 },
+      ];
+
+      const [persons, setPersons] = React.useState([...INITIAL_PERSONS]);
+      const [newName, setNewName] = React.useState('');
+      const [newNumber, setNewNumber] = React.useState('');
+      const [searchTerm, setSearchTerm] = React.useState('');
+      const [error, setError] = React.useState(false);
+
+      // 1
+      const addContact = (event) => {
+        event.preventDefault();
+        if (persons.find((person) => person.name === newName)) {
+          setError(true);
+          return;
+        }
+
+        const personObject = {
+          name: newName,
+          number: newPhoneNumber,
+        };
+        setPersons([...persons, personObject]);
+        setNewName('');
+        setNewNumber('');
+      };
+
+      // 2
+      const handleNameChange = (event) => {
+        //console.log('test', event.target.value);
+        setNewName(event.target.value);
+      };
+
+      // 3
+      const handleNumberChange = (event) => {
+        setNewNumber(event.target.value);
+      };
+
+      // 4
+      const handleSearch = (event) => setSearchTerm(event.target.value);
+      const searched = (searchTerm) => (person) =>
+        !searchTerm ||
+        person.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const filteredSearch = persons.filter(searched(searchTerm));
+
+      return (
+        <>
+          <h2>Phonebook</h2>
+          <SearchForm handleSearch={handleSearch} searchTerm={searchTerm} />
+          <h3>Add New Contact</h3>
+          <ContactForm
+            addContact={addContact}
+            newName={newName}
+            newPhoneNumber={newNumber}
+            handleNameChange={handleNameChange}
+            handlePhoneNumberChange={handleNumberChange}
+            error={error}
+          />
+          <div>
+            {filteredSearch.map((person) => {
+              return (
+                <Contact
+                  key={person.name}
+                  name={person.name}
+                  number={person.number}
+                />
+              );
+            })}
+          </div>
+        </>
+      );
+    };
+
+    const Contact = ({ name, number }) => (
+      <p>
+        {name} {number}
+      </p>
+    );
+
+    const SearchForm = ({ handleSearch, searchTerm }) => {
+      return (
+        <>
+          filter shown with :{' '}
+          <input type="text" onChange={handleSearch} value={searchTerm} />
+        </>
+      );
+    };
+
+    const ContactForm = ({
+      addContact,
+      newName,
+      newPhoneNumber,
+      handleNameChange,
+      handlePhoneNumberChange,
+      error,
+    }) => {
+      return (
+        <div>
+          <form onSubmit={addContact}>
+            {error && <p>{newName} already exists.</p>}
+            <div>
+              name:
+              <input type="text" value={newName} onChange={handleNameChange} />
+            </div>
+            <div>
+              number:
+              <input
+                type="text"
+                value={newPhoneNumber}
+                onChange={handlePhoneNumberChange}
+              />
+            </div>
+            <div>
+              <button type="submit">add</button>
+            </div>
+          </form>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, rootElement);
+  </script>
+</body>

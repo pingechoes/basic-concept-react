@@ -27,23 +27,28 @@
       const [points, setPoints] = React.useState(
         Array.from(Array(anecdotes.length), () => 0)
       );
+      //console.log(points);
+      const [newPoints, setNewPoints] = React.useState([...points]);
+
+      //console.log(newPoints);
 
       const addVoteCount = () => {
-        const newPoints = points.map((point, index) => {
+        newPoints.map((point, index) => {
           index === selected ? (point += 1) : (point += 0);
           return point;
         });
-        setPoints(newPoints);
+        //console.log(points);
+        setNewPoints(newPoints);
       };
 
-      const maxVoted = Math.max(...points);
+      const maxVoted = Math.max(...newPoints);
 
       return (
         <div>
           <AnecdoteOfTheDay
             anecdotes={anecdotes}
             selected={selected}
-            points={points}
+            points={newPoints}
           />
           <Button handleClick={nextAnecdote} text="next anecdote" />
           <span> | </span>
@@ -51,8 +56,8 @@
           <hr />
           <MostVotedAnecdote
             anecdotes={anecdotes}
-            mostIndex={points.indexOf(maxVoted)}
-            mostPoint={Math.max(...points)}
+            mostIndex={newPoints.indexOf(maxVoted)}
+            mostPoint={Math.max(...newPoints)}
           />
         </div>
       );
