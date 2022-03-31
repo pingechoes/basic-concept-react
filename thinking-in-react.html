@@ -1,0 +1,167 @@
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+  <script type="text/babel">
+    const rootElement = document.getElementById('root');
+
+    const App = () => {
+      const PRODUCTS = [
+        { category: 'Fruits', price: '$1', stocked: true, name: 'Apple' },
+        { category: 'Fruits', price: '$1', stocked: true, name: 'Dragonfruit' },
+        {
+          category: 'Fruits',
+          price: '$2',
+          stocked: false,
+          name: 'Passionfruit',
+        },
+        { category: 'Vegetables', price: '$2', stocked: true, name: 'Spinach' },
+        {
+          category: 'Vegetables',
+          price: '$4',
+          stocked: false,
+          name: 'Pumpkin',
+        },
+        { category: 'Vegetables', price: '$1', stocked: true, name: 'Peas' },
+      ];
+
+      return <FilteredTable products={PRODUCTS} />;
+    };
+
+    const FilteredTable = ({ products }) => {
+      const [inStockOnly, setInStockOnly] = React.useState(false);
+      const [searchTerm, setSearchTerm] = React.useState('');
+
+      const productToShow = inStockOnly
+        ? products.filter((product) => product.stocked === true)
+        : products;
+
+      const onInStockOnlyChange = (event) => {
+        event.target.checked;
+        setInStockOnly(!inStockOnly);
+      };
+
+      const searchedProducts = (searchTerm) => {
+        return (product) => {
+          !searchTerm ||
+            product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        };
+      };
+
+      //console.log(searchTerm);
+      const filteredSearchProduct = productToShow.filter(
+        searchedProducts(searchTerm)
+      );
+
+      const onSearchProductChange = (event) => {
+        setSearchTerm(event.target.value);
+      };
+
+      return (
+        <div>
+          <div>
+            <Search
+              inStockOnly={inStockOnly}
+              onInStockOnlyChange={onInStockOnlyChange}
+              searchTerm={searchTerm}
+              onSearchProductChange={onSearchProductChange}
+            />
+          </div>
+
+          <ProductTable products={filteredSearchProduct} />
+        </div>
+      );
+    };
+
+    const Search = ({
+      inStockOnly,
+      onInStockOnlyChange,
+      searchTerm,
+      onSearchTextChange,
+    }) => {
+      return (
+        <form>
+          <div>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={onSearchProductChange}
+            />
+          </div>
+
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={inStockOnly}
+                onChange={onInStockOnlyChange}
+              />
+              {'  '}
+              Only show products in stock
+            </label>
+          </div>
+        </form>
+      );
+    };
+
+    const ProductTable = ({ products }) => {
+      const rows = [];
+      let lastCategory = null;
+
+      const name = product.stocked ? (
+        product.name
+      ) : (
+        <span style={{ color: 'red' }}>{product.name}</span>
+      );
+
+      products.map((product) => {
+        if (product.category !== lastCategory) {
+          rows.push(
+            <ProductCategoryRow
+              key={product.category}
+              category={product.category}
+            />
+          );
+        }
+
+        rows.push(
+          <ProductRow key={product.name} name={name} price={product.price} />
+        );
+
+        lastCategory = product.category;
+      });
+
+      return (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      );
+    };
+
+    const ProductCategoryRow = ({ category }) => {
+      return (
+        <tr>
+          <th colSpan="2">{category}</th>
+        </tr>
+      );
+    };
+
+    const ProductRow = ({ name, price }) => {
+      return (
+        <tr>
+          <td>{name}</td>
+          <td>{price}</td>
+        </tr>
+      );
+    };
+
+    ReactDOM.render(<App />, rootElement);
+  </script>
+</body>
